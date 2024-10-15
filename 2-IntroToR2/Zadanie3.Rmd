@@ -1,0 +1,20 @@
+---
+title: "Zadanie3"
+author: "wiktoria"
+date: "2024-10-15"
+output: html_document
+---
+
+# **Wprowadzenie i Opis środowiska**:
+
+Sprawdzenie funkcji pakietu **decode**, który służy do analizy ekspresji genów.
+
+**Do jego wczytania potrzebny jest kod**:
+
+```{r}
+library(decode)
+```
+
+# **Wnioski**:
+
+Do zrozumienia działania tego pakietu konieczne są dodatkowe materiały i baza danych.
