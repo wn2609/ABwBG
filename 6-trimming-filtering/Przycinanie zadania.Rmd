@@ -1,0 +1,128 @@
+---
+title: "12/11"
+output: html_document
+date: "2024-11-12"
+---
+
+```{r}
+library(BiocManager)
+```
+
+```{r}
+BiocManager::install("ShortRead", force=TRUE)
+```
+```{r}
+library(ShortRead)
+```
+```{r}
+fq_reads1 <- readFastq("/Users/wika/Desktop/12:11/ecoli_simulated1_with_adapters.fq")
+fq_reads2 <- readFastq("/Users/wika/Desktop/12:11/ecoli_simulated2_with_adapters.fq")
+```
+
+```{r}
+trimmed_reads1 <- trimTailw(fq_reads1, k = 2, a = "B", halfwidth = 1)
+trimmed_reads2 <- trimTailw(fq_reads2, k = 2, a = "B", halfwidth = 1)
+```
+
+```{r}
+length(fq_reads1)
+length(trimmed_reads1)
+
+length(fq_reads2)
+length(trimmed_reads2)
+
+```
+```{r}
+sum(width(trimmed_reads1) < width(fq_reads1))
+sum(width(trimmed_reads2) < width(fq_reads2))
+```
+#Jaki % odczytów został zmodyfikowany?
+```{r}
+(1-(length(trimmed_reads1)/length(fq_reads1)))*100
+(1-(length(trimmed_reads2)/length(fq_reads2)))*100
+```
+
+#Filtracja odczytów
+
+```{r}
+filtered_reads1 <- trimmed_reads1[width(trimmed_reads1) >= 50]
+filtered_reads2 <- trimmed_reads2[width(trimmed_reads2) >= 50]
+```
+
+```{r}
+length(trimmed_reads1)
+length(filtered_reads1)
+
+length(trimmed_reads2)
+length(filtered_reads2)
+```
+#Jaki % odczytów został odrzucony podczas filtracji?
+```{r}
+(1-(length(filtered_reads1)/length(trimmed_reads1)))*100
+(1-(length(filtered_reads2)/length(trimmed_reads2)))*100
+```
+
+```{r}
+   writeFastq(filtered_reads1, "/Users/wika/Desktop/12:11/ecoli_simulated1_processed.fq")
+   writeFastq(filtered_reads2, "/Users/wika/Desktop/12:11/ecoli_simulated2_processed.fq")
+```
+
+```{r}
+qa_results1 <- qa("/Users/wika/Desktop/12:11/ecoli_simulated1_with_adapters.fq", type = "fastq")   
+qa_results1_processed <- qa( "/Users/wika/Desktop/12:11/ecoli_simulated1_processed.fq", type = "fastq")
+report(qa_results1, dest = "/Users/wika/Desktop/12:11/QA_report_read1")
+report(qa_results1_processed, dest = "/Users/wika/Desktop/12:11/QA_report_read1_processed")
+
+qa_results2 <- qa("/Users/wika/Desktop/12:11/ecoli_simulated2_with_adapters.fq", type = "fastq")   
+qa_results2_processed <- qa("/Users/wika/Desktop/12:11/ecoli_simulated2_processed.fq", type = "fastq")
+report(qa_results2, dest = "/Users/wika/Desktop/12:11/QA_report_read2")
+report(qa_results2_processed, dest = "/Users/wika/Desktop/12:11/QA_report_read2_processed")
+```
+```{r}
+hist(width(fq_reads1), breaks = 50, main = "Długość odczytów forward przed przycinaniem", xlab = "Długość (bp)")
+hist(width(filtered_reads1), breaks = 50, main = "Długość odczytów forward po przycinaniu", xlab = "Długość (bp)")
+```
+```{r}
+hist(width(fq_reads2), breaks = 50, main = "Długość odczytów reverse przed przycinaniem", xlab = "Długość (bp)")
+ hist(width(filtered_reads2), breaks = 50, main = "Długość odczytów reverse po przycinaniu", xlab = "Długość (bp)")
+```
+
+```{r}
+library(Biostrings)
+   adapter_seq <- DNAString("AGATCGGAAGAGC")
+```
+
+```{r}
+trimmed_reads1_adapt <- trimLRPatterns(
+  Lpattern = adapter_seq,
+  subject = filtered_reads1
+)
+filtered_reads1 <- trimmed_reads1_adapt
+
+```
+
+```{r}
+trimmed_reads2_adapt <- trimLRPatterns(
+  Lpattern = adapter_seq,
+  subject = filtered_reads2
+)
+filtered_reads2 <- trimmed_reads2_adapt
+```
+
+```{r}
+length(filtered_reads1)
+length(trimmed_reads1)
+
+length(filtered_reads2)
+length(trimmed_reads2)
+```
+```{r}
+#ilość odczytów zmodyfikowanych
+sum(width(filtered_reads1) < width(trimmed_reads1))
+sum(width(filtered_reads2) < width(trimmed_reads2))
+```
+
+
+
+
+
