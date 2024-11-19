@@ -1,0 +1,129 @@
+---
+title: "19/11"
+output: html_document
+date: "2024-11-19"
+---
+
+# Przygotowanie danych sekwencyjnych
+
+# Analiza jakości odczytów
+
+```{r}
+library(ShortRead)
+
+```
+
+```{r}
+fq1 <- readFastq("/Users/wika/Desktop/19:11/SRR31368982.fastq")
+
+```
+
+```{r}
+qa_result <- qa(fq1,lane="1")
+report(qa_result, dest="/Users/wika/Desktop/19:11/QA_Report")
+```
+
+#Importowanie genomu referencyjnego
+
+```{r}
+library(Biostrings)
+ref_genome <- readDNAStringSet("/Users/wika/Desktop/19:11/ecoli_genome.fna.gz")
+```
+
+# Budowanie indeksu genomu
+
+```{r}
+BiocManager::install("Rsubread", force=TRUE)
+```
+
+```{r}
+library(Rsubread)
+```
+
+```{r}
+buildindex(basename = "ecoli_index", reference = "/Users/wika/Desktop/19:11/ecoli_genome.fna.gz")
+```
+
+# Wykonanie mapowania
+
+```{r}
+align(index = "ecoli_index",
+      readfile1 = "/Users/wika/Desktop/19:11/SRR31368982.fastq",
+      input_format = "FASTQ",
+      output_file = "/Users/wika/Desktop/19:11/aligned_sample.BAM")
+```
+
+# Wstępna analiza wyników mapowania:
+
+# % poprawnie zmapowanych odczytów
+
+```{r}
+(713927/1219986)*100
+```
+
+# % odczytów, które nie zostały zmapowane
+
+```{r}
+(506059/1219986)*100
+```
+
+# Możliwe przyczyny niezmapowania odczytów:
+
+-   Insercje
+-   Delecje
+-   SNP
+
+# Analiza wyników mapowania
+
+# Import zmapowanych odczytów
+
+```{r}
+library(GenomicAlignments)
+
+aln <- readGAlignments("/Users/wika/Desktop/19:11/aligned_sample.BAM")
+```
+
+# Obliczenie pokrycia genomu: suma wszystkich odczytów/długość genomu referencyjnego
+
+```{r}
+coverage_data <- coverage(aln)
+```
+
+#Średnie pokrycie
+
+```{r}
+mean(cov_df$value)
+```
+Dany fragment został odczytany średnio 32 razy podczas sekwencjonowania. Wynik ten interpretuje się jako standardowy w takiego typu procedurach.
+
+Niskie pokrycie - poniżej 10
+Wysokie pokrycie - powyżej 30
+
+# Wizualizacja pokrycia
+
+```{r}
+library(ggplot2)
+```
+
+# Konwersja pokrycia do data frame
+
+```{r}
+cov_df <- as.data.frame(coverage_data[[1]])
+cov_df$position <- as.numeric(rownames(cov_df))
+```
+
+# Wykres pokrycia
+
+```{r}
+pdf("/Users/wika/Desktop/19:11/wykres_pokrycie.pdf", width = 8, height = 6)
+
+ggplot(cov_df[1:25000, ], aes(x = position, y = value)) +
+  geom_line(color = "blue") +
+  labs(title = "Pokrycie genomu E. coli",
+       x = "Pozycja w genomie",
+       y = "Liczba zmapowanych odczytów")
+       
+dev.off()
+```
+
+Najniższe pokrycie wynosi 0, gdyż pewne fragmenty sekwencji nie zostały zmapowane. Natomiast najwyższe pokrycie wynosi ok 80 odczytów danego fragmentu.
