@@ -1,0 +1,147 @@
+---
+title: "3/12"
+output: html_document
+date: "2024-12-03"
+---
+
+```{r}
+BiocManager::install(c("VariantTools", "Rsamtools", "GenomicRanges", "GenomicFeatures", "VariantAnnotation", "BiocParallel"))
+```
+
+# Ustalenie katalogu roboczego
+```{r}
+setwd("/Users/wika/Desktop/alignment")
+```
+
+# Sprawdzenie plików
+```{r}
+list.files()
+```
+
+# Wczytanie danych
+
+```{r}
+bamfile <- "/Users/wika/Desktop/alignment/aligned_sample.BAM"
+bam <- BamFile(bamfile)
+
+ref_genome <- "/Users/wika/Desktop/alignment/ecoli_reference.fasta"
+fa <- FaFile(ref_genome)
+```
+
+# Przesortowanie pliku BAM według współrzędnych
+
+```{r}
+input_bam <- "/Users/wika/Desktop/alignment/aligned_sample.BAM"
+output_bam <- "/Users/wika/Desktop/alignment/sorted_aligned_sample.BAM"
+
+sortBam(file = input_bam, destination = output_bam, overwrite = TRUE)
+sorted_bam <- "/Users/wika/Desktop/alignment/sorted_aligned_sample.BAM.bam" 
+```
+
+# Indeksowanie pliku FASTA
+
+```{r}
+indexFa(ref_genome)
+indexBam(sorted_bam)
+```
+
+# Kontrola jakości plików sekwencyjnych
+
+**Nagłówek pliku BAM**
+```{r}
+scanBamHeader(bam)
+```
+**Podstawowe statystyki pliku BAM**
+
+```{r}
+idxstats <- idxstatsBam(sorted_bam)
+print(idxstats)
+```
+
+**Obliczenie oraz wizualizacja pokrycia genomu**
+
+```{r}
+coverage_data <- coverage(sorted_bam)
+summary(coverage_data[[1]])
+
+plot(coverage_data[[1]], main="Pokrycie genomu dla sekwencji U00096.3", ylab="Pokrycie", xlab="Pozycja w genomie")
+```
+
+# Wykrywanie wariantów
+
+**Ustawienie parametrów i wykonanie pileup**
+
+```{r}
+pileup_param <- PileupParam(
+    distinguish_strands = FALSE,
+    distinguish_nucleotides = TRUE,
+    min_base_quality = 20
+)
+pile <- pileup(sorted_bam, scanBamParam = ScanBamParam(), pileupParam = pileup_param)
+```
+
+**Konwertowanie pileup do ramki danych**
+
+```{r}
+library(dplyr)
+
+pile_df<-as.data.frame(pile)
+class(pile_df)
+pile_df <- pile_df %>%
+    mutate(seqnames = as.character(seqnames)) %>%
+    mutate(seqnames = ifelse(seqnames == "U00096.3", "NC_000913.3", seqnames))
+```
+
+**Pogrupowanie danych według pozycji**
+
+```{r}
+variant_candidates <- pile_df %>%
+    group_by(seqnames, pos) %>%
+    summarise(
+        total = sum(count),
+        A = sum(count[nucleotide == "A"]),
+        C = sum(count[nucleotide == "C"]),
+        G = sum(count[nucleotide == "G"]),
+        T = sum(count[nucleotide == "T"]),
+        .groups = 'drop'
+    ) %>%
+    mutate(
+        ref = as.character(getSeq(fa, GRanges(seqnames, IRanges(pos, pos))))
+    ) %>%
+    rowwise() %>%
+    mutate(
+        
+        alt_alleles = list(setdiff(c("A", "C", "G", "T"), ref)),
+        
+        ref_count = sum(c_across(c("A", "C", "G", "T"))[ref]),
+        alt_count = sum(c_across(c("A", "C", "G", "T"))[alt_alleles])
+    ) %>%
+    ungroup() %>%
+    filter(alt_count >= 5) %>%
+    filter((alt_count / total) >= 0.2)
+```
+
+**Przykład wyświetlenia wariantów**
+```{r}
+head(variant_candidates)
+```
+
+# Filtracja i eksportowanie wyników do pliku
+
+```{r}
+filtered_variants <- variant_candidates %>%
+    filter(total >= 10, alt_count / total >= 0.2, alt_count >= 5)
+cat("Liczba wariantów przed filtrowaniem:", nrow(variant_candidates), "\n")
+cat("Liczba wariantów po filtrowaniu:", nrow(filtered_variants), "\n")
+
+```
+
+**Konwersja i eksportowanie pliku**
+
+```{r}
+df_variants <- as.data.frame(filtered_variants)
+
+write.csv(df_variants, "/Users/wika/Desktop/alignment/wyniki_wariantow.csv", row.names = FALSE)
+```
+
+
