@@ -1,24 +1,24 @@
 # Wykorzystanie wykresów do wizualizacji danych genomowych - podsumowanie:
 # 1. Wykresy podstawowe:
 
-#1a. **Boxplot** - przedstawianie rozkładu zmiennych oraz identyfikacji potencjalnych odchyleń (tzw. outlierów)
+# 1a. **Boxplot** - przedstawianie rozkładu zmiennych oraz identyfikacji potencjalnych odchyleń (tzw. outlierów)
 W **genomice** można go zastosować do:
 - wykazywania różnic w poziomie ekspresji genów między różnymi próbkami
 - przedstawienia rozkładu wartości genotypowych w odniesieniu do fenotypu w badaniach SNP i GWAS
 
-#1b. **Histogram** - przedstawianie rozkładu częstotliwości wartości danej zmiennej
+# 1b. **Histogram** - przedstawianie rozkładu częstotliwości wartości danej zmiennej
 W **genomice** można go zastosować do:
 - wizualizacji rozkładu liczby SNP w genomie
 - wizualizacji rozkładu częstości alleli w populacji w badaniach GWAS
 - analizy jakości danych z sekwencjonowania (np. przedstawienie rozkładu głębokości pokrycia)
 
-#1c. **Scatter plot** - przedstawienie relacji między dwiema zmiennymi
+# 1c. **Scatter plot** - przedstawienie relacji między dwiema zmiennymi
 W **genomice** można go zastosować do:
 - przedstawienia asocjacji pomiędzy wariantami genetycznymi (np. SNP) a fenotypem
 - wizualizacja zależności między ekspresją dwóch różnych genów w wielu próbkach
 - przedstawienie próbek w przestrzeni, co pozwala na ich grupowanie próbek na podstawie podobieństw genetycznych lub różnic w ekspresji genów
 
-#1d. **Violin + Boxplot** - taką hybrydę wykresów stosuje się aby dostarczyć bardziej szczegółowych informacji o rozkładzie danych
+# 1d. **Violin + Boxplot** - taką hybrydę wykresów stosuje się aby dostarczyć bardziej szczegółowych informacji o rozkładzie danych
 W **genomice** można go zastosować do:
 - pokazania jak różne genotypy wpływają na rozkład fenotypów w badaniach SNP
 
