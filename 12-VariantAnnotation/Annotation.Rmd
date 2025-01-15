@@ -1,0 +1,68 @@
+---
+title: '12'
+output: html_document
+date: "2025-01-07"
+---
+
+#Instalowanie pakietów:
+
+```{r}
+packages <- c("VariantAnnotation", "GenomicRanges", "AnnotationHub")
+BiocManager::install(packages)
+```
+
+#Ładowanie pakietów:
+
+```{r}
+library(VariantAnnotation)
+library(GenomicRanges)
+library(AnnotationHub)
+```
+
+# 1. Wczytanie i eksploracja danych
+
+```{r}
+
+#wczytanie ścieżki do pliku
+fl <- system.file("extdata", "chr22.vcf.gz", package="VariantAnnotation")
+
+#wczytanie pliku
+vcf <- readVcf(fl, "hg19")
+
+#podstawowe informacje o pliku
+vcf
+```
+
+# Analiza jakości
+
+```{r}
+summary(qual(vcf))
+```
+
+# Filtrowanie wariantów
+
+```{r}
+vcf_filtered <- vcf[!is.na(qual(vcf)) & qual(vcf) >99, ]
+vcf_filtered
+summary(qual(vcf_filtered))
+```
+
+# Anotacja wiarantów
+
+```{r}
+BiocManager::install("TxDb.Hsapiens.UCSC.hg19.knownGene")
+```
+```{r}
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+```
+
+```{r}
+gr <- rowRanges(vcf_filtered)
+
+loc_anno <- locateVariants(gr, txdb, AllVariants())
+head(loc_anno)
+```
+# Niestety funkcja nie działa:(
+
+
