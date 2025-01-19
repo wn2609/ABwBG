@@ -1,0 +1,61 @@
+---
+title: "NGS_QC"
+output: html_document
+date: "2025-01-19"
+---
+
+# Instalacja BiocManager
+
+```{r}
+if (!requireNamespace("BiocManager", quietly = TRUE)) 
+    install.packages("BiocManager")
+```
+
+# Instalacja wymaganych pakietów
+
+```{r}
+BiocManager::install("Rqc")
+BiocManager::install("ShortRead")
+BiocManager::install("Biostrings")
+```
+
+# Załadowanie zainstalowanych pakietów
+
+```{r}
+library(ShortRead)
+library(Rqc)
+library(Biostrings)
+```
+
+# Sprawdzenie wersji zainstalowanych pakietów
+
+```{r}
+packageVersion("ShortRead")
+packageVersion("Rqc")
+packageVersion("Biostrings")
+```
+
+
+# 1. Wczytanie sekwencji z pliku FASTA i wyświetlenie pierwszych kilku sekwencji
+
+```{r}
+dna_seqs <- readDNAStringSet("C:/Users/wika/Desktop/QC/SRR31238041.fasta.gz")
+
+dna_seqs[1:5]
+```
+
+# 2. Odwrócenie i komplementarność sekwencji
+
+```{r}
+rev_comp_seqs <- reverseComplement(dna_seqs)
+rev_comp_seqs[1:5]
+```
+
+# 3.Obliczanie zawartości GC
+
+```{r}
+gc_content <- letterFrequency(dna_seqs, letters = c("G", "C"), as.prob = TRUE)
+gc_content
+```
+
+
