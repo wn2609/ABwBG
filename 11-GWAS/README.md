@@ -62,8 +62,8 @@ Po przeprowadzeniu analizy GWAS wyodrębniono markery SNP, które wykazały stat
 
 Na końcu stworzono wykres Manhattan, który przedstawia rozmieszczenie markerów SNP na chromosomach i pozwala zobrazować obszary genomu, które wykazują silne powiązanie z analizowaną cechą.
 
-
-**Podsumowując** analiza **GWAS** pozwoliła na identyfikację markerów genetycznych powiązanych z cechami fenotypowymi. W ramach raportu przeprowadzono następujące etapy:
+# Podsumowanie
+**Podsumowując**, analiza **GWAS** pozwoliła na identyfikację markerów genetycznych powiązanych z cechami fenotypowymi. W ramach raportu przeprowadzono następujące etapy:
 
 - Wczytanie i wstępna obróbka danych genotypowych oraz fenotypowych
 - Kontrola jakości danych markerów SNP
