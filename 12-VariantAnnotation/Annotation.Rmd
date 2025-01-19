@@ -63,6 +63,5 @@ gr <- rowRanges(vcf_filtered)
 loc_anno <- locateVariants(gr, txdb, AllVariants())
 head(loc_anno)
 ```
-# Niestety funkcja nie działa:(
 
 
