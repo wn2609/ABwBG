@@ -1,4 +1,4 @@
-# Wykorzystanie wykresów do wizualizacji danych genomowych - podsumowanie:
+# Wykorzystanie wykresów do wizualizacji danych genomowych:
 # 1. Wykresy podstawowe:
 
 # 1a. **Boxplot** - przedstawianie rozkładu zmiennych oraz identyfikacji potencjalnych odchyleń (tzw. outlierów)
@@ -102,7 +102,9 @@ W **genomice** można go zastosować do:
 - analizy lokalizacji genów
 - zaznaczenie miejsc w genomie, gdzie występują mutacje
 
+# Podsumowanie
 
+Wykresy opisane wyżej są bardzo użytecznym narzędziem, gdyż odgrywają kluczową rolę w wizualizacji złożonych danych genomowych. Pomagają one w analizie zmian strukturalnych w genomie, identyfikowaniu powiązań między genotypem a fenotypem, analizie ekspresji genów, wykrywaniu mutacji, oraz w porównaniach międzygatunkowych, co umożliwia odkrywanie nowych zależności biologicznych i rozwoju chorób.
 
 
 
