@@ -1,4 +1,4 @@
-# Raport z wykorzystania pakietu Variant Annotation
+# Raport z analizy adnotacji waraintów
 
 # Wprowadzenie
 
@@ -28,7 +28,7 @@ Za pomocą funkcji `readVcf` wczytano przykładowy plik VCF z pakietu `VariantAn
 
   # 3. Analiza jakości
 
- Za pomocą funkcji `summary(qual(vcf))` wykonano analizę jakości, która dostarczyła informacji yakich jak:
+ Za pomocą funkcji `summary(qual(vcf))` wykonano analizę jakości, która dostarczyła informacji takich jak:
  - minimum
  - maximum
  - średnia
@@ -51,6 +51,17 @@ Funkcja `vcf[!is.na(qual(vcf)) & qual(vcf) >99, ]` pozwoliła na odfiltrowanie w
 
 Przykładowe zastosowanie:
 
+- Lokalizowanie SNP w regionach kodujących białka
+- Analiza wpływu wariantów na geny
+- Adnotacja wariantów z danymi zewnętrznymi
 
+# Podsumowanie
+
+W ramach analizy przeprowadzono następujące kroki:
+
+- wczytanie i zapoznanie się z danymi typu VCF
+- analiza jakości wczytanych plików
+- filtrowanie wariantów, w celu pozostawienia tylko tych o bardzo wysokiej jakości
+- anotacja wariantów z wykorzystaniem pakietu anotacyjnego `TxDb`
 
 
