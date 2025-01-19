@@ -6,7 +6,7 @@ Pakiet VariantAnnotation w genomice jest używany do adnotacji wariantów genety
 
 Do głównych zastosowań pakietu VariantAnnotation w genomice należą:
 - adnotacja wariantów
-- analiza konsekwencji biologicznych (np. zmiany struktury białka, zabureznia w transkrypcji)
+- analiza konsekwencji biologicznych (np. zmiany struktury białka, zaburzenia w transkrypcji)
 - korelacja z bazami danych
 - ocena istotności wariantów
 
