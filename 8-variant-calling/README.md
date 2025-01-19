@@ -25,17 +25,21 @@ Ustawienie katalogu roboczego przy pomocy funkcji setwd pozwala na łatwe zarzą
 # 3. Wczytanie danych wejściowych
 
 **3.1 Plik BAM**
+
 Plik BAM (`aligned_sample1.BAM`) zawierający wyrównane odczyty sekwencyjne jest wczytywany za pomocą funkcji `BamFile()`.
 
 **3.2 Genom referencyjny**
+
 Genom referencyjny w formacie FASTA (`ecoli_reference1.fasta`) jest ładowany za pomocą funkcji `FaFile()`.
 
 # 4. Sortowanie i indeksowanie plików BAM oraz FASTA
 
 **4.1 Sortowanie plików BAM**
+
 Za pomocą funkcji `sortBam()` plik BAM jest sortowany według współrzędnych, co ułatwia dalsze indeksowanie i analizę danych.
 
 **4.2 Indeksowanie plików FASTA i BAM**
+
 Funkcje `indexFa()` oraz `indexBam()` indeksują odpowiednio pliki FASTA i BAM, umożliwiając szybki dostęp do danych w trakcie analizy.
 
 # 5. Kontrola jakości danych sekwencyjnych
@@ -43,26 +47,32 @@ Funkcje `indexFa()` oraz `indexBam()` indeksują odpowiednio pliki FASTA i BAM, 
 Kontrola jakości jest niezbędna, aby mieć pewność, że analiza wariantów będzie opierała się na wiarygodnych danych.
 
 **5.1 Nagłówek pliku BAM**
+
 Funkcja `scanBamHeader()` umożliwia odczyt metadanych pliku BAM i pozwala na weryfikację poprawności jego struktury.
 
 **5.2 Statystyki BAM**
+
 Za pomocą `idxstatsBam()` generowane są podstawowe statystyki, w tym liczba odczytów przypisanych do sekwencji w genomie:
 
 Zmapowane odczyty: 713927
 Odczyty niezmapowane: 506059
 
 **5.3 Pokrycie genomu**
+
 Funkcja `coverage()` oblicza pokrycie genomu, czyli liczbę odczytów przypadających na każdą pozycję w genomie. Wizualizacja za pomocą plot(coverage_data) pozwala na ocenę jakości pokrycia. Regiony o wysokim pokryciu mogą wskazywać na artefakty lub sekwencje powtarzalne, a niskie pokrycie może oznaczać problemy z sekwencjonowaniem.
 
 # 6. Wykrywanie wariantów
 
 **6.1 Pileup**
+
 Funkcja `pileup()` generuje dane dotyczące liczby odczytów dla każdej pozycji w genomie, z uwzględnieniem minimalnej jakości bazy oraz ignorowaniem podziału na nici DNA.
 
 **6.2 Konwersja wyników do ramki danych**
+
 Dane z funkcji `pileup()` są przekształcane do ramki danych, a następnie przetwarzane za pomocą pakietu `dplyr`. Dodawane są również informacje o nazwach sekwencji i danych referencyjnych.
 
 **6.3 Obliczanie prawdopodobnych wariantów**
+
 Na podstawie liczby odczytów dla każdego nukleotydu, stosując filtry minimalnej liczby odczytów (≥ 5) oraz proporcji odczytów alternatywnych (≥ 20%), identyfikowane są prawdopodobne warianty, eliminując szumy techniczne.
 
 # 7. Filtracja i eksport wyników
